@@ -7,6 +7,7 @@ git side of this project. Read this before committing or pushing.
 
 ```
 Agentic_Trading/                 parent repo  -> github.com/SubodhKarki/Agentic_Trading   (private)
+├── CLAUDE.md                    START HERE for any AI: accounts, hard rules, scheduled tasks
 ├── *.md                         Go/No-Go frameworks, Supabase guide, this file
 ├── .gitmodules                  submodule definitions
 ├── autonomous_Stock/            SUBMODULE    -> github.com/SubodhKarki/autonomous_stock
@@ -68,6 +69,19 @@ Then per machine (none of these are in git):
   - `autonomous_Stock/config/local.yaml` (real account number)
   - `autonomous_Stock/data/state.db` (sleeve ledger; losing it loses ownership records)
   - `~/.tokens/robinhood.pickle`: run `automation/robinhood_login.py` once
+- **autonomous_Stock / S3 Top 20:**
+  - `autonomous_Stock/.env` needs `S3_DISCORD_WEBHOOK` (Discord #agentic_gent) and
+    `S3_ACCOUNT_NUMBER` (the S3 sleeve's Robinhood account).
+  - The order script runs on the UW venv (has `robin_stocks`):
+    `UW_agentic_claude/trading/.venv` — rebuild per `UW_agentic_claude/SETUP.md`, then
+    `trading/.env` needs `ROBINHOOD_USERNAME` / `ROBINHOOD_PASSWORD`, and run
+    `trading/automation/robinhood_login.py` once by hand to cache `~/.tokens/robinhood.pickle`.
+  - Install the launchd job that posts tickets: copy
+    `autonomous_Stock/scripts/com.autonomousstock.momentumv2.plist` to `~/Library/LaunchAgents/`
+    (fix paths inside if the home folder differs) and `launchctl load` it.
+  - Test Discord: `touch autonomous_Stock/data/s3_top20/.send_test` (posts on the next job run).
+  - The cloud scheduled tasks are tied to the old Mac — re-link them to the new computer in the
+    Claude desktop app (task settings) or recreate them from the prompts in HANDOFF/spec.
 - Optional: recreate the symlink:
   `ln -s "$PWD/UW_agentic_claude/trading" live-trailing-stop`
 
@@ -82,6 +96,8 @@ Then per machine (none of these are in git):
   `.env`/env vars (see `scripts/s3_discord_push.py`).
 
 ## Notes for Claude (Cowork sessions)
+
+Start with `CLAUDE.md` in this folder (accounts, hard rules, scheduled tasks).
 
 The Cowork device shell (`device_bash`) runs in a sandboxed VM with the folder
 mounted. It has real limits here:
@@ -99,7 +115,10 @@ mounted. It has real limits here:
    brand-new repo needs it set before committing.
 4. **Computer use can't type into Terminal** (click-only tier), so it can't run
    the push either.
-5. Add the session attribution trailer to commit messages as instructed by the system.
+5. **No trading from the session.** Claude never places stock orders (S3 orders go through the
+   user-run `scripts/s3_place_orders.py --execute`), and never logs in to Robinhood with the user's
+   credentials — so the order script's broker paths can only be tested by the user.
+6. Add the session attribution trailer to commit messages as instructed by the system.
 
 Suggested order in a session: request delete permission → `git status -sb` in
 all three repos → review diffs and scan new files for secrets → ask the user
