@@ -1,0 +1,3 @@
+.DS_Store
+# symlink to an absolute path on this Mac; not portable
+live-trailing-stop

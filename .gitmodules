@@ -1,0 +1,6 @@
+[submodule "autonomous_Stock"]
+	path = autonomous_Stock
+	url = git@github.com:SubodhKarki/autonomous_stock.git
+[submodule "UW_agentic_claude"]
+	path = UW_agentic_claude
+	url = git@github.com:SubodhKarki/UW_agentic_claude.git
