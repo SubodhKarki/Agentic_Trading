@@ -18,10 +18,9 @@ on the verdict AND on each checklist item.
 ## Accounts (never print full numbers — mask as ••••1234)
 
 - Robinhood **Agentic** ••••9209 — the one agent-tradable account (options trading, journal sync).
-  Also holds the S3 live sleeve for now. $250 of it is the S3 sleeve; the rest is NOT S3 money.
-- Robinhood individual (default) ••••8009 — read-only to Claude.
-- Planned: a dedicated plain individual Robinhood account for S3 (read-only to Claude is enough).
-  When it exists, set `S3_ACCOUNT_NUMBER` in `autonomous_Stock/.env` and note it in HANDOFF.
+  NOT used for S3.
+- Robinhood individual (default) ••••8009 — **the S3 live sleeve account** since 2026-09-30 ($250
+  deposited, S3-only money). Read-only to Claude. `S3_ACCOUNT_NUMBER` in `autonomous_Stock/.env`.
 - Fidelity Roth IRA (long-term) and a taxable account — not connected; not used for S3.
 - S3 stays in a **taxable** account by the user's choice. Tax notes: churn is mostly short-term
   gains; **wash sales apply across all accounts incl. the IRA and options on the same ticker**
