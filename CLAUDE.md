@@ -63,5 +63,6 @@ Use the list/update scheduled-task tools to check state; IDs above may go stale.
 
 ## Common requests
 
-- "S3 Top 20: status" / "run picks" / "done" / "12-month review" → `autonomous_Stock/HANDOFF.md`.
+- "S3 Top 20: status" / "run picks now" (on demand: fire the picks scheduled task) / "done" / "12-month review" → `autonomous_Stock/HANDOFF.md`.
+- Any scheduled task can be run on demand with the fire-scheduled-task tool; IDs in the table above.
 - "commit and push" → `GIT_SETUP.md` (commit in submodules, bump parent, give user one push command).
