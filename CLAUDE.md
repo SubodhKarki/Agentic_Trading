@@ -5,11 +5,11 @@ trader (Robinhood, Unusual Whales flow) plus a small systematic stock sleeve.
 Prefers direct, ranked recommendations; Go/No-Go verdicts use 🟢 GO / 🟡 CAUTION / 🔴 NO-GO
 on the verdict AND on each checklist item.
 
-## Where we are (updated 2026-10-01)
+## Where we are (updated 2026-10-02)
 
 - **S3 Top 20 is LIVE.** Run #1 done: 20 positions (~$12.50 each) bought 2026-10-01 in ••••8009 by the user's
   order script, verified by Claude. Next: picks after the close **Fri 2026-10-30**, user trades **Mon 2026-11-02**
-  2:00–2:45pm CT. Review on/after 2027-10-01. Full status, monthly cycle, lessons and the user's to-do list:
+  2:00–2:45pm CT. Paper ledger filled at the 2026-10-01 close (recorded 10-02). Review on/after 2027-10-01. Full status, monthly cycle, lessons and the user's to-do list:
   `autonomous_Stock/HANDOFF.md` (top section).
 - Options side (UW_agentic_claude) unchanged by the S3 work.
 
@@ -55,6 +55,7 @@ on the verdict AND on each checklist item.
 |---|---|---|
 | S3 Top 20 — monthly picks (paper + live $250 ticket) | trig_01PjHvF9websBbM51BgMvaqo | Last NYSE trading day, 3:15pm CT + retries to ~9:15pm CT. Tied to this Mac. |
 | S3 Top 20 — monthly paper fill | trig_01FvJ84hkrueD8WH6PVyRmYC | Days 2-9, ~6am/~8pm CT |
+| Missed-run catch-up watchdog (all scheduled tasks) | trig_015Dt5P6PpfMEWeeKxqN1KbN | Cloud-only, every 2h 7am-9pm CT. A missed run (Mac offline) switches a task OFF (`suspension_reason: device_absent`). Watchdog tries to re-enable + fire; unattended runs are usually blocked from that, so it posts "ACTION NEEDED: <task>" → user says "re-enable and run <task>" in a chat. Leaves user-disabled tasks alone. |
 | Robinhood Trade Journal Sync | trig_01W3YeaJr8yV3spbYjpSLMUd | Weekdays 3:30pm CT → Supabase `trades` |
 | Supabase keep-alive ping | trig_01REnSWVHo13wMZBridLwaSv | every 3 days |
 | ma200 daily fetch + reconcile | trig_01WbmahrEWKz2Hjg2mrnx5U4 | ma200 is paused (`PAUSE_MA200`); candidate to disable |
