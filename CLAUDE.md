@@ -12,6 +12,8 @@ on the verdict AND on each checklist item.
   2:00–2:45pm CT. Paper ledger filled at the 2026-10-01 close (recorded 10-02). Review on/after 2027-10-01. Full status, monthly cycle, lessons and the user's to-do list:
   `autonomous_Stock/HANDOFF.md` (top section).
 - Options side (UW_agentic_claude) unchanged by the S3 work.
+- **Planned move:** autonomous_Stock daemons + S3 tasks → a MacBook Pro left on 24/7 (Oct–Nov). Steps:
+  `autonomous_Stock/HANDOFF.md` → "Moving to another Mac" (helper `scripts/move_mac.sh`). UW daemons stay on the Air.
 
 ## What's in here
 
