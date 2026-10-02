@@ -12,8 +12,22 @@ on the verdict AND on each checklist item.
   2:00–2:45pm CT. Paper ledger filled at the 2026-10-01 close (recorded 10-02). Review on/after 2027-10-01. Full status, monthly cycle, lessons and the user's to-do list:
   `autonomous_Stock/HANDOFF.md` (top section).
 - Options side (UW_agentic_claude) unchanged by the S3 work.
-- **Planned move:** autonomous_Stock daemons + S3 tasks → a MacBook Pro left on 24/7 (Oct–Nov). Steps:
-  `autonomous_Stock/HANDOFF.md` → "Moving to another Mac" (helper `scripts/move_mac.sh`). UW daemons stay on the Air.
+- **Machine move PLANNED (not done yet):** autonomous_Stock → MacBook Pro. See "Machines" below.
+
+## Machines (which Mac does what)
+
+| Machine | Claude device name | Role |
+|---|---|---|
+| **MacBook Air** | `sabinas-macbook-air-local` | Sabina's everyday Mac. Options side (UW_agentic_claude: trail check, heartbeat, status bot). Runs autonomous_Stock only until the move. NOT on 24/7 — may be off for weeks. |
+| **MacBook Pro** | (fill in when first linked) | **autonomous_Stock host from the move on:** S3 Discord push, momentum_v2, momentum_stocks, stock cycle/boot/listener, the S3 order script (UW venv + Robinhood login only), and the cloud S3 scheduled tasks. On 24/7, plugged in, sleep off, through Oct–Nov 2026. |
+
+- **Move status: PLANNED.** Steps: `autonomous_Stock/HANDOFF.md` → "Moving to another Mac" (helper `scripts/move_mac.sh`).
+  When done, change this line to DONE + date and fill in the Pro's device name.
+- Which machine am I on? The session's linked computer name (`get_device_info`), or `scutil --get ComputerName` in the
+  user's Terminal. (`hostname` inside Claude's device shell just says `claude` — not useful.)
+- Never run the autonomous_Stock launchd jobs on both Macs at once (duplicate Discord posts, two ledgers).
+- Cloud scheduled tasks that use a Mac are tied to ONE computer. After the move they must be re-linked to the Pro;
+  otherwise they stay tied to the Air and switch themselves off whenever the Air is off (see the watchdog row below).
 
 ## What's in here
 
@@ -55,7 +69,7 @@ on the verdict AND on each checklist item.
 
 | Task | ID | Notes |
 |---|---|---|
-| S3 Top 20 — monthly picks (paper + live $250 ticket) | trig_01PjHvF9websBbM51BgMvaqo | Last NYSE trading day, 3:15pm CT + retries to ~9:15pm CT. Tied to this Mac. |
+| S3 Top 20 — monthly picks (paper + live $250 ticket) | trig_01PjHvF9websBbM51BgMvaqo | Last NYSE trading day, 3:15pm CT + retries to ~9:15pm CT. Tied to the MacBook Air until re-linked to the Pro. |
 | S3 Top 20 — monthly paper fill | trig_01FvJ84hkrueD8WH6PVyRmYC | Days 2-9, ~6am/~8pm CT |
 | Missed-run catch-up watchdog (all scheduled tasks) | trig_015Dt5P6PpfMEWeeKxqN1KbN | Cloud-only, every 2h 7am-9pm CT. A missed run (Mac offline) switches a task OFF (`suspension_reason: device_absent`). Watchdog tries to re-enable + fire; unattended runs are usually blocked from that, so it posts "ACTION NEEDED: <task>" → user says "re-enable and run <task>" in a chat. Leaves user-disabled tasks alone. |
 | Robinhood Trade Journal Sync | trig_01W3YeaJr8yV3spbYjpSLMUd | Weekdays 3:30pm CT → Supabase `trades` |
@@ -65,7 +79,7 @@ on the verdict AND on each checklist item.
 
 Use the list/update scheduled-task tools to check state; IDs above may go stale.
 
-## Local daemons (launchd on the Mac)
+## Local daemons (launchd; autonomous_Stock ones move to the MacBook Pro)
 
 - `com.autonomousstock.momentumv2` → `autonomous_Stock/scripts/run_momentum_v2.sh` (~every 3h +
   3:45/4:45pm CT weekdays). Also runs `s3_discord_push.py`, which posts new S3 order tickets to
