@@ -43,6 +43,12 @@ of which chat, which AI, or which account is running it.
 - **Trade only on the Agentic account. If the connected Robinhood login has more than one account, confirm which one is the Agentic/trading-enabled account before placing any order — never assume the first one returned is correct.**
 - **PDT rule eliminated (updated 9/18/2026):** the $25,000 minimum equity requirement and the Pattern Day Trader designation itself were eliminated (SEC-approved 4/14/2026, effective 6/4/2026); Robinhood has removed PDT flags from accounts accordingly. The old day-trade-count check for 0DTE Express (4th same-ticker-or-not day trade in 5 business days = hard NO-GO) no longer applies. A $2,000 minimum equity requirement still applies to trade on margin generally — worth a quick buying-power sanity check, but not a day-trade-count gate.
 
+**UW alert filter recommendations (added 10/5/2026, based on this week's no-go pattern):** these belong in the myFLOW filter config itself, not just this scoring doc — set them there to cut down on alerts that fail this framework before they're even sent:
+- **Open Interest MIN: 50-100.** Would have pre-filtered SPCX (OI 0), C (OI 25), NG (OI 0), ONT (OI 0) — four of the worst alerts this week.
+- **Days To Expiry MIN: ~5, MAX: ~90.** Kills the ORCL-style tier-gap (3 DTE) and both LEAPS alerts (NG/ONT at 400+ DTE). Set up a separate 0DTE-specific alert (0-2 DTE) if that tier should still fire.
+- **Market Cap MIN: ~$2B.** Screens out thin small-caps like NG (~$6.65/share, likely sub-$1B).
+- **No filter fixes the recurring #1 failure reason (missing catalyst)** — that stayed a manual Check #2/#5 judgment call on nearly every alert this week (KVYO, AGI, ORCL, PATH, RBLX, IOT, LITE, FRO, C, TSLA) and will keep being one; no UW field screens for "is there real news behind this."
+
 ---
 
 ## 1. Strategy Tiers — pick the one the alert actually fits
@@ -56,6 +62,12 @@ of which chat, which AI, or which account is running it.
 | **0DTE Express** | 0-2 | $500K+ | 85%+ | 5x+ | 1 | -15%/+20% pair, no ladder | Must close by 3:30pm ET, no exceptions |
 
 **A signal only fits ONE tier** — don't force a Scalp-5-DTE alert into Standard's 14+ floor, and don't let a UW-assigned tag ("Take the Trade") override what the actual numbers qualify for. Re-classify based on premium/ask/vol-oi/DTE yourself every time.
+
+**Known alert header/category types (updated 10/5/2026)** — the banner at the top of each alert card is informational, not a verdict:
+- "REPEATED HITS" / "REPEATED HITS ASCENDING FILL" / "REPEATED HITS DESCENDING FILL" — the normal flow signal this framework scores. Ascending = each successive print filled higher (chasing strength); descending = each filled lower (buying a pullback) — descending is generally the healthier of the two, not a red flag by itself.
+- "TAKE THE TRADE (3+ green)" — the alert source's own pre-filter, meaning 3+ independent flow prints already agreed before this one fired. Useful context, but still re-verify the actual numbers yourself — it's not a free pass past the tiers.
+- "FLOOR TRADE LARGE CAP" — don't trust the "large cap" label at face value (FRO carried this tag at a ~$5B market cap). Check real market cap yourself.
+- "LOW HISTORIC VOLUME FLOOR" — seen twice (NG, ONT), both with 100% Multi% and 400+ DTE. This appears to be flagging a technical volume/price floor on the underlying, not aggressive directional options buying. **Treat this category as out-of-scope for this framework — hard NO-GO — until there's a reason to build separate rules for it.**
 
 **Budget rule (no % cap):** `contracts_to_buy = min(tier_max_contracts, floor(buying_power / (ask_price × 100)))`. Fails only if you can't afford even 1 contract. If multiple tickers clear GO at once, all buying power goes to the single best-scoring GO (fewest Caution/Fail checks, tiebreak by highest deduped cumulative premium) — don't split.
 
@@ -121,6 +133,10 @@ every single order, not just during a full Go/No-Go score.**
 - **Fed/FOMC awareness:** if the hold period spans a scheduled FOMC meeting, minutes release, or major macro print (CPI/PCE/NFP), flag it under Check #2. Markets move on surprise vs. expectations, not simply hike-vs-cut — a hawkish surprise hits stocks broadly (esp. growth/tech), a dovish surprise lifts them, an in-line decision often does little.
 - **Holiday/long-weekend timing:** avoid momentum entries within 1 trading day of a market holiday/long weekend, or size down and tighten the stop if you do — the position sits through the closure with zero ability to react.
 - **Multi-alert dedup:** if you see the same ticker/strike/expiration fire multiple times close together, check whether it's the same print tagged by multiple rule labels (same Total Prem + Vol + Price = same print, count once) before summing cumulative premium.
+- **Multi% check (added 10/5/2026):** check the alert's Multi% field before trusting the Ask-Side%/premium as a clean directional signal. Multi% is the share of volume that's part of a multi-leg structure (spreads), not a naked single-leg buy. Above ~30-40% multi-leg, the ask-side/premium numbers stop meaning what they normally mean — you can't read "100% ask-side" as pure directional conviction when it's one leg of a spread. **100% multi-leg (seen on NG, ONT 10/2-10/5/2026) → treat as a different signal type entirely, not scoreable against the normal tiers, hard NO-GO.** 50-80% (FRO 10/1/2026, 70.83%) → caution at minimum, treat cumulative premium and ask-side% as unreliable.
+- **OI minimum (added 10/5/2026):** OI below ~50-100 contracts makes Vol/OI meaningless regardless of how large the multiple looks — a "107x" on OI of 25 (C, 10/1) or literal 0 OI (SPCX 9/21, NG/ONT 10/2-10/5) is not conviction, it's an empty denominator. Flag any OI under 50 as a real liquidity/data-quality concern, not just a number to note in passing.
+- **DTE gap check:** if the alert's DTE doesn't land inside ANY tier's stated range (e.g. 3-4 days — too long for 0DTE Express's 0-2, too short for Scalp-Flex's 5-14; seen on ORCL 9/29/2026), that's a structural disqualifier by itself. Don't force it into the nearest tier.
+- **LEAPS / very long DTE (90+ days, especially 150+):** these fall outside what this framework's tiers were built to score (Standard/TTT's "14+" was never meant to mean "any length"). Combined with high Multi% and/or zero OI, as seen on both LEAPS alerts this week, treat as out-of-scope and NO-GO rather than trying to fit the numbers into Standard or Take-the-Trade.
 
 ## 4a. Thesis Invalidation (write this BEFORE entry, every trade)
 
@@ -260,7 +276,7 @@ Minimum data still required even in quick mode:
 - One-sentence thesis invalidation — this doesn't get cut even in a fast check
 - One-line verdict
 
-## 7a. Known Ticker History (static snapshot, refreshed 9/18/2026 — will go stale, refresh from Supabase after 3pm CST/weekends periodically)
+## 7a. Known Ticker History (static snapshot, refreshed 9/18/2026 — **now 2+ weeks stale as of 10/5/2026, refresh from Supabase after 3pm CST/weekends before trusting these numbers for a real sizing decision**)
 
 Tickers with 3+ logged trades — this is real track record, not a live feed:
 
@@ -290,6 +306,8 @@ Tickers with 3+ logged trades — this is real track record, not a live feed:
 - Rule existed in the framework but wasn't actually applied at execution time (smart entry price, intraday-high check both skipped 9/17-9/18/2026 on AAPL/TXN) → having a rule on file is not the same as running it; Section 2's checklist must be stated explicitly before every order, not assumed
 - Executed a sell instantly on a previously-set price while the bid was actively running higher with real time left before the deadline (TXN 9/18/2026 — sold at $5.20, bid was at $5.55 four minutes later) → a fresh momentum check before executing an exit, not just before an entry, is now mandatory (see Section 2)
 - Held overnight or into a weekend on a position whose Check #5 (catalyst fragility) was already 🟡 or worse — no confirmed, company-specific reason to hold, just riding broad market momentum — and got hit by macro or analyst news before the next open. Happened twice: INTC 9/9-10 gapped through a correctly-placed breakeven stop on a geopolitical selloff + bearish Intel Foundry note ($2.66 fill vs. $3.55 stop — a real slippage loss despite good process); AAPL 9/17-18 got stopped out the next morning on a Fed rate hike plus a UBS note on soft iPhone 18 demand, after being entered with no company-specific catalyst of its own. **New rule: a position that closes the day with Check #5 at 🟡 or worse is a same-day-close candidate, not an automatic overnight hold, even with a stop in place** — a stop protects against price, not against a gap through it.
+- **Missing catalyst is the single most common NO-GO reason by far (week of 9/29-10/5/2026):** KVYO, AGI, ORCL, PATH, RBLX, IOT, LITE, FRO, C, and TSLA (9/23) were all otherwise-decent-looking flow with no dated, confirmed reason behind the move. Strong ask-side%/premium/OI numbers do NOT make up for this — treat "no catalyst found" as close to a standalone disqualifier, not just one of five equally-weighted checks.
+- **Check #2 means BOTH earnings AND FOMC, every time** — on the TSLA 9/23/2026 trade, earnings (Oct 28) was flagged but the overlapping FOMC meeting (Oct 27-28) was missed until asked directly. Check both calendars every time, not just whichever comes to mind first.
 - Note the difference between the two failure types above: the INTC gap-through was GOOD execution (correct entry, correctly ratcheted stop) with a BAD outcome (unpredictable overnight gap) — score it as clean process, not a mistake. The AAPL case was a genuine execution failure (chased the ask, entered on no catalyst, held anyway). Don't let one bad-luck gap-through erode confidence in stops generally, and don't let a bad-luck outcome excuse an actual process error either — see Section 9.
 
 ## 8a. Good Execution Patterns Worth Repeating (not just losses — do these again)
