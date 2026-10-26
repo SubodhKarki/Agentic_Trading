@@ -1,6 +1,6 @@
 # Agentic_Trading — start here (for Claude / any AI, any machine)
 
-Owner: Sabina Godar (retrocumulative87@gmail.com), DFW, Central Time. Retail options
+Owner: Subodh Karki (retrocumulative87@gmail.com), DFW, Central Time. Retail options
 trader (Robinhood, Unusual Whales flow) plus a small systematic stock sleeve.
 Prefers direct, ranked recommendations; Go/No-Go verdicts use 🟢 GO / 🟡 CAUTION / 🔴 NO-GO
 on the verdict AND on each checklist item.
@@ -18,7 +18,7 @@ on the verdict AND on each checklist item.
 
 | Machine | Claude device name | Role |
 |---|---|---|
-| **MacBook Air** | `sabinas-macbook-air-local` | Sabina's everyday Mac. Options side (UW_agentic_claude: trail check, heartbeat, status bot). Runs autonomous_Stock only until the move. NOT on 24/7 — may be off for weeks. |
+| **MacBook Air** | `sabinas-macbook-air-local` | Subodh's everyday Mac. Options side (UW_agentic_claude: trail check, heartbeat, status bot). Runs autonomous_Stock only until the move. NOT on 24/7 — may be off for weeks. |
 | **MacBook Pro** | (fill in when first linked) | **autonomous_Stock host from the move on:** S3 Discord push, momentum_v2, momentum_stocks, stock cycle/boot/listener, the S3 order script (UW venv + Robinhood login only), and the cloud S3 scheduled tasks. On 24/7, plugged in, sleep off, through Oct–Nov 2026. |
 
 - **Move status: PLANNED.** Steps: `autonomous_Stock/HANDOFF.md` → "Moving to another Mac" (helper `scripts/move_mac.sh`).

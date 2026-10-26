@@ -16,7 +16,7 @@ Agentic_Trading/                 parent repo  -> github.com/SubodhKarki/Agentic_
 ```
 
 - All three repos use branch `main` and **SSH** remotes (`git@github.com:...`).
-- Commit identity: `Sabina Godar <retrocumulative87@gmail.com>`.
+- Commit identity: `Subodh Karki <retrocumulative87@gmail.com>`.
 - The parent repo does NOT contain the submodules' files. It stores a pointer
   (a commit SHA) to each one. On GitHub they show up as links (`name @ sha`).
 
@@ -60,7 +60,7 @@ If you already cloned without `--recurse-submodules`: `git submodule update --in
 Then per machine (none of these are in git):
 
 - Needs an SSH key added to the GitHub account (`ssh -T git@github.com` to test).
-- Set the identity: `git config --global user.name "Sabina Godar"` and
+- Set the identity: `git config --global user.name "Subodh Karki"` and
   `git config --global user.email retrocumulative87@gmail.com`.
 - **UW_agentic_claude:** install the secret-scanning pre-commit hook:
   `cp ops/pre-commit-secret-check.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`
