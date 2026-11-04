@@ -108,17 +108,54 @@ mounted. It has real limits here:
 2. **Deleting is blocked by default, which breaks git.** Even `git status` can
    leave a 0-byte `.git/index.lock` it can't remove, and every later git command
    then fails with "Another git process seems to be running". Call
-   `device_request_delete_permission` on `/Users/sabinagodar/Agentic_Trading`
-   **before** running any git command. If a stale lock already exists (0 bytes,
+   `device_request_delete_permission` on `/Users/Automation/Claude/Agentic_Trading`
+   **before** running any git command. (It said `/Users/sabinagodar/Agentic_Trading`
+   until 2026-11-04 — that is the pre-move MacBook Air home, and it is outside the
+   boundary in `autonomous_Stock/AI_ACCESS_POLICY.md`, so never touch it.)
+   If a stale lock already exists (0 bytes,
    no git process running), remove it with `rm -f <repo>/.git/index.lock`.
 3. **The VM has no global git identity.** It's set per repo (`git config user.*`). A
    brand-new repo needs it set before committing.
-4. **Computer use can't type into Terminal** (click-only tier), so it can't run
-   the push either.
+4. **Computer use may click and type** (user granted typing 2026-11-04; it was
+   click-only before). Availability still varies by session — check the tools are
+   actually present before relying on it, and prefer handing over a command for
+   anything long or locked, where a mistyped character is hard to spot.
 5. **No trading from the session.** Claude never places stock orders (S3 orders go through the
    user-run `scripts/s3_place_orders.py --execute`), and never logs in to Robinhood with the user's
    credentials — so the order script's broker paths can only be tested by the user.
 6. Add the session attribution trailer to commit messages as instructed by the system.
+
+## Notes for Claude (local sessions on the MacBook Pro)
+
+Different from the Cowork notes above: a local Claude Code session runs as `subodhkarki`
+on the real filesystem, not in a mounted VM. **Git does not work from it at all**
+(verified 2026-11-04):
+
+- `git status` → *"fatal: detected dubious ownership in repository at
+  /Users/Automation/Claude/Agentic_Trading/autonomous_Stock"*, because the repo is owned
+  by `Automation`.
+- Past that, `.git/modules/autonomous_Stock/index` is `-rw-r--r--` owned by `Automation`,
+  so a commit could not write it. The *directories* are `drwxrws---`, which is why
+  ordinary data files under `data/` are writable while the index is not.
+- Do **not** add a `safe.directory` exception for another account's repo to work around
+  this.
+
+So commits and pushes are handed to the user as one command:
+
+```bash
+su - Automation -c 'cd ~/Claude/Agentic_Trading/autonomous_Stock && git add -- <paths> && git commit -m "..." && cd .. && git add autonomous_Stock && git commit -m "..." && cd autonomous_Stock && git push && cd .. && git push'
+```
+
+- It prompts for **Automation's** password. Not `sudo` — root's `~` is `/var/root`, so
+  every `~/Claude/...` path breaks.
+- Pushing works from that account (SSH keys are there); the Cowork note about unreachable
+  remotes is about the VM, not this.
+- Order matters: submodule commit → parent bump → push submodule → push parent. Pushing the
+  parent first leaves it pointing at a commit the remote does not have.
+- Use explicit paths in `git add`, never `-A`: other jobs (momentum_top3, s3_twin,
+  ledger pushes) routinely leave unrelated files modified, and this repo holds `.env`.
+- The same `su - Automation` applies to `scripts/s3_place_orders.py`, because `.env` and
+  `~/.tokens/robinhood.pickle` are both mode `600` owned by `Automation`.
 
 Suggested order in a session: request delete permission → `git status -sb` in
 all three repos → review diffs and scan new files for secrets → ask the user

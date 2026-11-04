@@ -60,9 +60,19 @@ on the verdict AND on each checklist item.
    are seen — bug fixes only, each logged in that file's change log with a reason.
 3. Secrets: `.env*`, `config/local.yaml`, `~/.tokens/robinhood.pickle`, webhooks, account numbers —
    never commit, never print. UW repo has a content-scanning pre-commit hook.
-4. Git from the Cowork shell: request delete permission for `/Users/sabinagodar/Agentic_Trading`
-   BEFORE any git command (stale `index.lock` otherwise); pushing is always the user's Terminal
-   (SSH remotes unreachable from the sandbox). Details in `GIT_SETUP.md`.
+4. **Git must run as the `Automation` user** (verified 2026-11-04). From a `subodhkarki` session
+   git refuses twice over: *"fatal: detected dubious ownership"*, and
+   `.git/modules/autonomous_Stock/index` is `-rw-r--r--` owned by `Automation`, so a commit could
+   not write it even past that check. Do NOT add a `safe.directory` exception for another account's
+   repo to work around it. Instead hand the user one command:
+   `su - Automation -c 'cd ~/Claude/Agentic_Trading/... && git ...'` — it asks for **Automation's**
+   password (not `sudo`: root's `~` is `/var/root`, so the paths break). Push works fine from that
+   account. Order matters: commit the submodule, bump the parent, then push submodule **then**
+   parent, or the parent points at a commit the remote does not have. Prefer explicit paths in
+   `git add` — other jobs leave unrelated files modified. Details in `GIT_SETUP.md`.
+   (The old version of this rule named `/Users/sabinagodar/Agentic_Trading` and a stale `index.lock`;
+   that is the pre-move MacBook Air setup, and that path is outside the access boundary set in
+   `autonomous_Stock/AI_ACCESS_POLICY.md` anyway — never touch it.)
 5. Computer use (desktop control): Claude may **click and type**. The user granted typing on
    2026-11-04; the earlier "click only, no typing" line was Claude's own note from the MacBook Air
    setup, not a rule the user set. Two caveats that are not permissions: *availability* is separate
