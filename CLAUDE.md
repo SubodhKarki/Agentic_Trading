@@ -63,7 +63,12 @@ on the verdict AND on each checklist item.
 4. Git from the Cowork shell: request delete permission for `/Users/sabinagodar/Agentic_Trading`
    BEFORE any git command (stale `index.lock` otherwise); pushing is always the user's Terminal
    (SSH remotes unreachable from the sandbox). Details in `GIT_SETUP.md`.
-5. Computer use can only click in Terminal (no typing) — hand the user commands to paste instead.
+5. Computer use (desktop control): Claude may **click and type**. The user granted typing on
+   2026-11-04; the earlier "click only, no typing" line was Claude's own note from the MacBook Air
+   setup, not a rule the user set. Two caveats that are not permissions: *availability* is separate
+   (some sessions have no computer-use tool at all — check before promising it), and for a long or
+   locked piece of text (a scheduled-task prompt, a rules doc) prefer the clipboard or a handed-over
+   command over typing it out, because a single mistyped character there is hard to spot afterwards.
 
 ## Scheduled tasks (cloud, on the user's claude.ai account; they need the Mac on + Claude app open)
 
