@@ -12,17 +12,26 @@ on the verdict AND on each checklist item.
   2:00–2:45pm CT. Paper ledger filled at the 2026-10-01 close (recorded 10-02). Review on/after 2027-10-01. Full status, monthly cycle, lessons and the user's to-do list:
   `autonomous_Stock/HANDOFF.md` (top section).
 - Options side (UW_agentic_claude) unchanged by the S3 work.
-- **Machine move PLANNED (not done yet):** autonomous_Stock → MacBook Pro. See "Machines" below.
+- **Machine move DONE for the local daemons (verified 2026-11-05).** All nine launchd jobs run on the
+  MacBook Pro out of `/Users/Automation/Claude/`. The **cloud** scheduled tasks are still tied to the
+  Air and must be re-linked to the Pro — see "Machines" below.
 
 ## Machines (which Mac does what)
 
 | Machine | Claude device name | Role |
 |---|---|---|
 | **MacBook Air** | `sabinas-macbook-air-local` | Subodh's everyday Mac. Options side (UW_agentic_claude: trail check, heartbeat, status bot). Runs autonomous_Stock only until the move. NOT on 24/7 — may be off for weeks. |
-| **MacBook Pro** | (fill in when first linked) | **autonomous_Stock host from the move on:** S3 Discord push, momentum_v2, momentum_stocks, stock cycle/boot/listener, the S3 order script (UW venv + Robinhood login only), and the cloud S3 scheduled tasks. On 24/7, plugged in, sleep off, through Oct–Nov 2026. |
+| **MacBook Pro** | ComputerName “SubodhKarki’s MacBook Pro”; Claude device name still to fill in | **autonomous_Stock host (live since the move):** S3 Discord push, momentum_v2, momentum_stocks, stock cycle/boot/listener, the S3 order script (UW venv + Robinhood login only), and the cloud S3 scheduled tasks. On 24/7, plugged in, sleep off, through Oct–Nov 2026. |
 
-- **Move status: PLANNED.** Steps: `autonomous_Stock/HANDOFF.md` → "Moving to another Mac" (helper `scripts/move_mac.sh`).
-  When done, change this line to DONE + date and fill in the Pro's device name.
+- **Move status: launchd jobs DONE (2026-11-05), cloud tasks NOT yet re-linked.** Evidence for the
+  local half: `launchctl list` shows all nine labels loaded on the Pro, last exit 0, and
+  `com.trading.statusbot` + `com.autonomousstock.listener` hold live PIDs. Still open: the Pro's
+  **Claude** device name (not the same string as ComputerName — fill it in from a linked session),
+  and re-linking the cloud scheduled tasks, which this machine's task list does not show at all.
+  Until that is done they stay tied to the Air and switch themselves off whenever it is off.
+  Steps: `autonomous_Stock/HANDOFF.md` → "Moving to another Mac" (helper `scripts/move_mac.sh`).
+  NOT verified from here: whether the Air still has its copies of these jobs loaded. If it does,
+  both Macs are running them — the duplicate-ledger hazard below. Check it on the Air.
 - Which machine am I on? The session's linked computer name (`get_device_info`), or `scutil --get ComputerName` in the
   user's Terminal. (`hostname` inside Claude's device shell just says `claude` — not useful.)
 - Never run the autonomous_Stock launchd jobs on both Macs at once (duplicate Discord posts, two ledgers).
