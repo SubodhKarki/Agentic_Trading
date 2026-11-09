@@ -99,7 +99,11 @@ on the verdict AND on each checklist item.
 | Robinhood Trade Journal Sync | trig_01W3YeaJr8yV3spbYjpSLMUd | Weekdays 3:30pm CT → Supabase `trades` |
 | Supabase keep-alive ping | trig_01REnSWVHo13wMZBridLwaSv | every 3 days |
 | ma200 daily fetch + reconcile | trig_01WbmahrEWKz2Hjg2mrnx5U4 | ma200 is paused (`PAUSE_MA200`); candidate to disable |
-| Momentum Top 3 — monthly picks | trig_01CzvVot9ykbuWLmNXRYJpZR | DISABLED (cancelled) |
+| Momentum Top 3 — monthly picks | trig_01CzvVot9ykbuWLmNXRYJpZR | **NOT cancelled — this row said so until 2026-11-08 and was a month stale.** Re-enabled 2026-10-06 as a notification-only paper signal (user decision, logged in `momentum_top3_forward_test.md`). Fires after the close on the LAST trading day of the month. **It does the real work:** refreshes the universe + bars via the Robinhood MCP, runs `momentum_top3_picker.py`, writes the paper ledger. The Mac only POSTS what this produces (`top3_discord_push.py`). |
+| Momentum Top 3 — paper fill + scorecard | trig_01DymfRBDNkXxdufBoxeCLiK | Monthly, early in the month. Writes `compare_<date>.md` + the marks. |
+| Stock notifications relay + Mac health check | trig_01PoxxrwNwLGjGyz8mdjU6a2 | Frequent. The only short-cycle task of the five that require a computer — so its next-run time is the fastest way to tell whether a re-bind took. |
+
+**Silent-failure mode worth knowing (2026-11-08):** for Momentum Top 3 the cloud task is the picker and the Mac is only the postman. If that task is disabled, suspended or bound to an absent Mac, no `picks_<date>.md` is ever written — and the Mac's daemon keeps running, finds nothing new, posts nothing and exits 0. Nothing alarms. S3 has a month-end guard for exactly this (`autonomous_Stock/sql/2026-11-04_s3_picks_missing_alarm.sql`); Top 3 has none yet. Last picks: 2026-10-30. Next due: the last trading day of November.
 
 Use the list/update scheduled-task tools to check state; IDs above may go stale. **But they do not
 work from an `Automation` session** (verified 2026-11-08): the cloud tasks belong to the Claude app
