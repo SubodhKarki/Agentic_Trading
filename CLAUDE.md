@@ -101,7 +101,12 @@ on the verdict AND on each checklist item.
 | ma200 daily fetch + reconcile | trig_01WbmahrEWKz2Hjg2mrnx5U4 | ma200 is paused (`PAUSE_MA200`); candidate to disable |
 | Momentum Top 3 — monthly picks | trig_01CzvVot9ykbuWLmNXRYJpZR | DISABLED (cancelled) |
 
-Use the list/update scheduled-task tools to check state; IDs above may go stale.
+Use the list/update scheduled-task tools to check state; IDs above may go stale. **But they do not
+work from an `Automation` session** (verified 2026-11-08): the cloud tasks belong to the Claude app
+running under the owner's own login, `/Users/Automation/.claude/scheduled-tasks/` does not exist, so
+`list_scheduled_tasks` returns empty and `list_task_runs` says "not found" for a valid `trig_` ID.
+An empty list here is NOT evidence a task is gone or unbound. Check it in the desktop app, or in a
+conversation in that app. See `autonomous_Stock/MOVE_TO_PRO.md` §6.
 
 ## Local daemons (launchd; autonomous_Stock ones move to the MacBook Pro)
 
