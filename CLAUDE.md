@@ -32,6 +32,16 @@ on the verdict AND on each checklist item.
   Steps: `autonomous_Stock/HANDOFF.md` → "Moving to another Mac" (helper `scripts/move_mac.sh`).
   NOT verified from here: whether the Air still has its copies of these jobs loaded. If it does,
   both Macs are running them — the duplicate-ledger hazard below. Check it on the Air.
+- **Confirmed cost of the un-finished re-link, as of 2026-11-18:** `stock.notifications` shows a
+  quiet alarm from 2026-11-17 reporting **"Stock notifications relay + Mac health check" is OFF**
+  with `suspension_reason: device_absent`, and no Discord post between 2026-11-04 and 2026-11-18.
+  The other four tasks were healthy and enabled in that same alarm. So this is no longer a
+  theoretical risk — it has already cost ~13 days of relayed cards. Fix is the owner's: open the
+  Claude desktop app signed in **on the Pro** and re-link/re-enable that task; the catch-up
+  watchdog re-enables it once the Mac is reachable. Cannot be done from an `Automation` session
+  (`list_scheduled_tasks` returns empty there — not evidence the task is gone).
+  The new 7am health card does NOT depend on this task or on any device binding: Supabase posts it
+  over the webhook in `stock.config`, so it keeps arriving while the relay is down.
 - Which machine am I on? The session's linked computer name (`get_device_info`), or `scutil --get ComputerName` in the
   user's Terminal. (`hostname` inside Claude's device shell just says `claude` — not useful.)
 - Never run the autonomous_Stock launchd jobs on both Macs at once (duplicate Discord posts, two ledgers).
