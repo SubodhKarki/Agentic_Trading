@@ -118,6 +118,30 @@ conversation in that app. See `autonomous_Stock/MOVE_TO_PRO.md` §6.
   3:45/4:45pm CT weekdays). Also runs `s3_discord_push.py`, which posts new S3 order tickets to
   Discord #agentic_gent (Claude's sandboxes can't reach Discord).
 - UW_agentic_claude jobs (heartbeat, trail check, status bot) — see its `SETUP.md`.
+- `com.machine.heartbeat` → `autonomous_Stock/scripts/mac_health.py` (every 5 min, `RunAtLoad`).
+  Stamps `stock.mac_heartbeat` in Supabase with a machine-health snapshot (uptime, how many of
+  the nine launchd jobs are loaded, any non-zero last exits, quiet job logs, disk, load, power).
+  **It sends nothing.** The morning notification is produced in the cloud — see below.
+
+## Daily 7am CT machine-health card (added 2026-11-18, owner's standing request)
+
+One Discord card every morning at 7:00am CT saying whether this Mac and its jobs are up, "or if
+this computer is down". The down half is why the design is split:
+
+| Piece | Where | When |
+|---|---|---|
+| `scripts/mac_health.py` | the Mac (`com.machine.heartbeat`) | every 5 min — leaves a timestamp, sends nothing |
+| `stock.mac_health_card()` | Supabase, pg_cron job `mac-health-7am` | 7:00am CT — reads the heartbeat's AGE and posts the card |
+
+A job on the Mac cannot report that the Mac is down; it dies with it and the only symptom is an
+absence. So the judge lives in the cloud. 🟢 up (heartbeat ≤20 min), 🟡 late (≤2 h), 🔴 DOWN
+(>2 h, or never seen). Problems the Mac found are listed under "Needs a look"; a clean machine
+says "Nothing needs your attention."
+
+pg_cron fires hourly across 11–15 UTC and the function gates on the America/Chicago hour, so it
+is DST-proof; a per-day dedupe key makes the other four invocations no-ops. Definition and full
+rationale: `autonomous_Stock/sql/2026-11-18_mac_health_daily_card.sql`. To watch a different Mac,
+update the `mac_health_host` row in `stock.config` — no function edit.
 
 ## Common requests
 
